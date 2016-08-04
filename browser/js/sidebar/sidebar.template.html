@@ -1,0 +1,12 @@
+
+<section ng-show="playlists">
+  <h4 class="menu-item active">
+    <a>Playlists</a>
+  </h4>
+  <p ui-sref-active="active" ng-repeat="playlist in playlists" class="menu-item">
+    <a ui-sref="playlist({playlistId: playlist.id, ownerId: playlist.owner.id, playlistName: playlist.name})">
+      {{ playlist.name }}
+    </a>
+  </p>
+</section>
+

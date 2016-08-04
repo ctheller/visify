@@ -1,0 +1,78 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #fdfdfd;
+}
+
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+#main {
+  margin: 0 auto;
+}
+
+* {
+  box-sizing: border-box; }
+
+body {
+  background: #222222;
+  padding-bottom: 56px; }
+
+#main {
+  padding-left: 0; }
+
+.col-xs-2 {
+	padding-left: 0;
+}
+
+sidebar {
+  position: fixed;
+  background: #303030;
+  height: 80.5vh;
+  width: inherit;
+  overflow-y: scroll;
+  border-right: 2px solid #555; }
+  sidebar .logo {
+    width: 100%;
+    padding: 15px; }
+  sidebar section > * {
+    padding: 0 15px; }
+  sidebar .menu-item {
+    transition: border-left, 0.2s; }
+    sidebar .menu-item a {
+      color: #c8c8c8; }
+      sidebar .menu-item a:hover {
+        color: white; }
+    sidebar .menu-item.active, sidebar .menu-item:hover {
+      border-left: 3px solid #00bc8c; }
+
+footer {
+  position: fixed;
+  background-color: #555;
+  border-top: 1px solid #555;
+  box-shadow: 1px 1px 10px 1px #111;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 45px;
+  border-top: 1px solid #222;
+  border-bottom: 1px solid #222;
+  padding: 8px; }
+  footer .bar {
+    overflow: hidden;
+    padding: 9px; }
+  footer .progress {
+    cursor: pointer; }
+  footer .progress-bar {
+    transition: none !important; }
+
+
+@import 'directives/main';
+@import 'login/main';
