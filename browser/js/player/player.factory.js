@@ -35,6 +35,7 @@ app.factory('PlayerFactory', function ($rootScope) {
     audio.load();
     currentSong = song;
     currentList = list;
+    if (!song.preview_url) return player.next();
     player.resume();
   };
 
@@ -65,6 +66,7 @@ app.factory('PlayerFactory', function ($rootScope) {
     else {
     var index = currentList.indexOf(currentSong);
     index = mod(index + interval, currentList.length);
+    if (!currentList[index].preview_url) return;
     player.start(currentList[index], currentList);
     }
   }
@@ -110,9 +112,9 @@ app.factory('PlayerFactory', function ($rootScope) {
   // audio event listening
 
   audio.addEventListener('ended', function () {
-    player.pause();
-    currentSong = null,
+    player.next();
     $rootScope.$evalAsync();
+    $rootScope.$broadcast('songChange');
   });
 
   audio.addEventListener('timeupdate', function () {

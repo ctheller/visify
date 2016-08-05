@@ -6,9 +6,17 @@ app.config(function ($stateProvider) {
     });
 });
 
-app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetriever, AUTH_EVENTS, $log, d3Service){
+app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetriever, AUTH_EVENTS, $log, d3Service, PlayerFactory){
 	
-	
+	$scope.optionList = [{name: 'Danceability',value:'danceability'}, {name: 'Tempo',value:'tempo'}, {name: 'Energy',value:'energy'}, {name: 'Duration', value:'duration_ms'}, {name: 'Positivity',value:'valence'}]
+
+	$scope.metadata = 'duration_ms';
+
+	$scope.changeMeta = function(string){
+		$scope.metadata = string;
+		$scope.render($scope.tracks);
+	}
+
 	var getSongs = function(){
 		SpotifyRetriever.getAudioFeaturesForMany()
 		.then(function(tracks){
@@ -18,9 +26,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 			tracks = _.flatten(tracks);
 			$scope.tracks = tracks;
 
-			console.log(tracks);
-
-			$scope.tracks.sort(function(a,b){return b.tempo - a.tempo});
+			$scope.tracks.sort(function(a,b){return b[$scope.metadata] - a[$scope.metadata]});
 
 			$scope.render($scope.tracks);
 		})
@@ -50,8 +56,10 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 		var barWidth = 20;
 		var barPadding = 2;
 
+
+
 		// Use the category20() scale function for multicolor support
-       	var color = d3.scaleOrdinal(d3.schemeCategory20);
+        var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 		$scope.render = function(data) {
 
@@ -67,23 +75,37 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
         
   //       
 
-  			var height = window.innerHeight-100;
+  			var height = window.innerHeight-140;
   			var width = window.innerWidth;
 
-  			barWidth = width/60;
 
+  			//Make seconds instead of milliseconds
+  			if ($scope.metadata==='duration_ms') {
+  				data = data.map(function(d){
+  					d[$scope.metadata] = d[$scope.metadata]/1000;
+  					return d;
+  				})
+  			}
+  				
+
+  			var buckets = 40;
+  			
   			var xScale = d3.scaleLinear()
-  				.domain([0, d3.max(data, function(d){ return d.tempo})])
+  				.domain([d3.min(data, function(d){ return d[$scope.metadata]}), d3.max(data, function(d){ return d[$scope.metadata]})])
 			    .range([0, width]);
 
 			var histogram = d3.histogram()
 								.domain(xScale.domain())
-								.thresholds(xScale.ticks(40));
+								.thresholds(xScale.ticks(buckets));
 
-			// var histo = histogram(data.map(function(d){return d.tempo}));
-			var histo = histogram.value(function(d){return d.tempo})(data);
+			// var histo = histogram(data.map(function(d){return d[$scope.metadata]));
+			var histo = histogram.value(function(d){return d[$scope.metadata]})(data);
+
+			barWidth = (width-margin*2)/histo.length-barPadding;
+
 
 			console.log(histo);
+
 		 
 		//     // set the height based on the calculations above
 		   	svg.attr('height', width);
@@ -91,7 +113,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 
 			var yScale = d3.scaleLinear()
 			    .domain([0, d3.max(histo, function(d) { return d.length; })])
-			    .range([height, 10]);
+			    .range([height, 20]);
 
 			//var formatCount = d3.format(",.0f")
 
@@ -111,21 +133,22 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 		       	.attr('x', function(d, i){ return (barWidth+barPadding)*i+margin})
 		       	.attr('y', height)
 		       	.attr('fill', function(d) { return color(d); })
+		       	.attr('opacity', 1)
 		       	.transition()
 		         	.duration(800)
 		         	.attr('y', function(d){return yScale(d.length)})
 		        	.attr('height', function(d){return height - yScale(d.length)})
 
 		      bar.append("text")
-			    .attr("font-size", barWidth/1.5)
+			    .attr("font-size", barWidth/1.7)
 			    .attr('font-family', 'courier')
-			    .attr("y", height+50)
 			    .attr("x", function(d, i){ return (barWidth+barPadding)*i+margin+barWidth/2})
 			    .attr("text-anchor", "middle")
+			    .style('fill', 'white')
 			    .text(function(d) { if (d.length) return d.length })
 		      	.transition()
 		        .duration(800)
-			    .attr("y", function(d){return yScale(d.length)+barWidth/1.8})	
+			    .attr("y", function(d){return yScale(d.length)-barWidth/5})	
 
 		    svg.selectAll('rect')
 		    .on("mouseover", handleMouseOver)
@@ -138,9 +161,13 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	function handleMouseOver(d, i) {  // Add interactivity
 
             // Use D3 to select element, change color and size
-            d3.select(this).attr('fill', "black")
+            d3.select(this).attr('opacity', .5)
+
+
+
 
             // Specify where to put label of text
+
             svg.append("text")
                .attr('id', "t" + i)
                .attr('x', 100).attr('y', 100)
@@ -153,7 +180,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 
 	function handleMouseOut(d, i) {
 	    // Use D3 to select element, change color back to normal
-	    d3.select(this).attr('fill', color(d));
+	    d3.select(this).attr('opacity', 1)
 
 	    // // Select text by id and then remove
 	    d3.select("#t" + i).remove();  // Remove text location
@@ -166,17 +193,24 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	    
 		    SpotifyRetriever.getTracksById(trackIds)
 		    .then(function(tracks){
-		    	tracks[0].tracks.forEach(function(t){
-		    		console.log(t.name);
-		    	})
+		    	tracks = tracks[0].tracks
+		    	PlayerFactory.start(_.sample(tracks), tracks);
+		    	$scope.currentSong = PlayerFactory.getCurrentSong();
 		    })
 
 	  }
 
-
-
-
 	});
+
+	$rootScope.$on('songChange', function(){
+		$scope.currentSong = PlayerFactory.getCurrentSong();
+	});
+
+	$scope.stopSong = function(){
+		PlayerFactory.pause();
+		$scope.currentSong = null;
+	}
+
 
 
 
