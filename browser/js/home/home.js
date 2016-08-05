@@ -20,7 +20,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 
 			console.log(tracks);
 
-			$scope.tracks.sort(function(a,b){return b.danceability - a.danceability});
+			$scope.tracks.sort(function(a,b){return b.tempo - a.tempo});
 
 			$scope.render($scope.tracks);
 		})
@@ -73,14 +73,14 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
   			barWidth = width/60;
 
   			var xScale = d3.scaleLinear()
-  				.domain([0,1])
+  				.domain([0, d3.max(data, function(d){ return d.tempo})])
 			    .range([0, width]);
 
 			var histogram = d3.histogram()
 								.domain(xScale.domain())
 								.thresholds(xScale.ticks(40));
 
-			var data = histogram(data.map(function(d){return d.danceability}));
+			var data = histogram(data.map(function(d){return d.tempo}));
 
 			console.log(data);
 		 
@@ -117,17 +117,18 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 
 		      bar.append("text")
 			    .attr("font-size", barWidth/1.5)
+			    .attr('font-family', 'courier')
 			    .attr("y", height+50)
 			    .attr("x", function(d, i){ return (barWidth+barPadding)*i+margin+barWidth/2})
 			    .attr("text-anchor", "middle")
 			    .text(function(d) { if (d.length) return d.length })
 		      	.transition()
 		        .duration(800)
-			    .attr("y", function(d){return yScale(d.length)+barWidth/1.5})	
+			    .attr("y", function(d){return yScale(d.length)+barWidth/1.8})	
 
-		    // svg.selectAll('rect')
-		    // .on("mouseover", handleMouseOver)
-      //       .on("mouseout", handleMouseOut);
+		    svg.selectAll('rect')
+		    .on("mouseover", handleMouseOver)
+            .on("mouseout", handleMouseOut);
 
   
 
@@ -141,27 +142,24 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 
 	function handleMouseOver(d, i) {  // Add interactivity
 
-			console.log(this);
-
             // Use D3 to select element, change color and size
-            d3.select(this).attr('fill', "black").attr('width', 20);
+            d3.select(this).attr('fill', "black")
 
             // Specify where to put label of text
-            // var thisOne = svg.append("text").attr({
-            //    id: "t" + d.id,  // Create an id for text so we can select it later for removing on mouseout
-            //     x: 100,
-            //     y: 100,
-            //     fill: "white"
-            // })
-            //thisOne.text("FUCK");
+            svg.append("text")
+               .attr('id', "t" + i)
+               .attr('x', 100).attr('y', 100)
+               .attr('font-family', '"Arial Black", Gadget, sans-serif')
+               .attr('fill', "white").text("BPM: " + d.x0 + ' to '+d.x1);
+     
           }
 
 	function handleMouseOut(d, i) {
 	    // Use D3 to select element, change color back to normal
-	    d3.select(this).attr('fill', color(d.danceability));
+	    d3.select(this).attr('fill', color(d));
 
 	    // // Select text by id and then remove
-	  //   // d3.select("#t" + d.id).remove();  // Remove text location
+	    d3.select("#t" + i).remove();  // Remove text location
 	  }
 
 
