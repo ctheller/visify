@@ -80,22 +80,23 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 								.domain(xScale.domain())
 								.thresholds(xScale.ticks(40));
 
-			var data = histogram(data.map(function(d){return d.tempo}));
+			// var histo = histogram(data.map(function(d){return d.tempo}));
+			var histo = histogram.value(function(d){return d.tempo})(data);
 
-			console.log(data);
+			console.log(histo);
 		 
 		//     // set the height based on the calculations above
 		   	svg.attr('height', width);
 
 
 			var yScale = d3.scaleLinear()
-			    .domain([0, d3.max(data, function(d) { return d.length; })])
+			    .domain([0, d3.max(histo, function(d) { return d.length; })])
 			    .range([height, 10]);
 
 			//var formatCount = d3.format(",.0f")
 
 			var bar = svg.selectAll(".bar")
-			    .data(data)
+			    .data(histo)
 			 	.enter().append("g")
 			    .attr("class", "bar")
 			    //.attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
@@ -128,16 +129,10 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 
 		    svg.selectAll('rect')
 		    .on("mouseover", handleMouseOver)
-            .on("mouseout", handleMouseOut);
+            .on("mouseout", handleMouseOut)
+            .on("click", handleClick);
 
-  
-
-
-
-
-
-
-
+ 
 		};
 
 	function handleMouseOver(d, i) {  // Add interactivity
@@ -151,6 +146,8 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
                .attr('x', 100).attr('y', 100)
                .attr('font-family', '"Arial Black", Gadget, sans-serif')
                .attr('fill', "white").text("BPM: " + d.x0 + ' to '+d.x1);
+
+            
      
           }
 
@@ -162,7 +159,19 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	    d3.select("#t" + i).remove();  // Remove text location
 	  }
 
+	  function handleClick(d, i) {
 
+			//Get track name and preview URL etc for selection.
+            var trackIds = d.map(function(t){return t.id});
+	    
+		    SpotifyRetriever.getTracksById(trackIds)
+		    .then(function(tracks){
+		    	tracks[0].tracks.forEach(function(t){
+		    		console.log(t.name);
+		    	})
+		    })
+
+	  }
 
 
 

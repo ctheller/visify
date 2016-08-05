@@ -95,6 +95,14 @@ app.factory('SpotifyRetriever', function(AuthService, Spotify, $log){
         })
     }
 
+    SpotifyRetriever.getTracksById = function(trackIds){
+        var trackIdsChunked = _.chunk(trackIds, 50);
+        var gettingTracks = trackIdsChunked.map(function(chunk){
+            return Spotify.getTracks(chunk);
+        })
+        return Promise.all(gettingTracks);
+    }
+
 
 
 
