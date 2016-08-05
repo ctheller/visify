@@ -89,7 +89,7 @@ app.factory('SpotifyRetriever', function(AuthService, Spotify, $log){
         .then(function(trackIds){
             var trackIdsChunked = _.chunk(trackIds, 100);
             var gettingFeatures = trackIdsChunked.map(function(chunk){
-                return Spotify.getTracksAudioFeatures(chunk);
+                return Spotify.getTracksAudioFeatures(chunk, {market:"US"});
             })
             return Promise.all(gettingFeatures);
         })

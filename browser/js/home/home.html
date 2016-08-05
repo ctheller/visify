@@ -1,6 +1,6 @@
 <section id="home">  
 	<div id="toggles">
-	<span style="color: white; padding-left: 20px" ng-click="stopSong()">{{currentSong.name}}</span>
+	<img ng-show="currentSong" id="albumImage" ng-src="{{currentSong.album.images[0].url}}"><span ng-show="currentSong" ng-click="stopSong()">{{currentSong.name}} - {{currentSong.artists[0].name}}</span>
 	<div class="btn-group" role="group" aria-label="...">
 	  		<button ng-repeat="option in optionList" type="button" class="btn btn-default" ng-click="changeMeta(option.value)">{{option.name}}</button>
 	</div>

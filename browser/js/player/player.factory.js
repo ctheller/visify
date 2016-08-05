@@ -66,7 +66,7 @@ app.factory('PlayerFactory', function ($rootScope) {
     else {
     var index = currentList.indexOf(currentSong);
     index = mod(index + interval, currentList.length);
-    if (!currentList[index].preview_url) return;
+    if (!currentList[index].preview_url && currentList.length<5) return;
     player.start(currentList[index], currentList);
     }
   }

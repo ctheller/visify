@@ -8,7 +8,16 @@ app.config(function ($stateProvider) {
 
 app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetriever, AUTH_EVENTS, $log, d3Service, PlayerFactory){
 	
-	$scope.optionList = [{name: 'Danceability',value:'danceability'}, {name: 'Tempo',value:'tempo'}, {name: 'Energy',value:'energy'}, {name: 'Duration', value:'duration_ms'}, {name: 'Positivity',value:'valence'}]
+	$scope.optionList = [{name: 'Danceability',value:'danceability'}, 
+						{name: 'Tempo',value:'tempo'}, 
+						{name: 'Energy',value:'energy'}, 
+						{name: 'Duration', value:'duration_ms'}, 
+						{name: 'Positivity',value:'valence'},
+						{name: "Speechiness", value:'speechiness'},
+						{name: "Acousticness", value:'acousticness'},
+						{name: "Liveness", value: 'liveness'},
+						{name: "Key", value: 'key'}]
+						
 
 	$scope.metadata = 'duration_ms';
 
@@ -142,6 +151,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 		      bar.append("text")
 			    .attr("font-size", barWidth/1.7)
 			    .attr('font-family', 'courier')
+			    .attr('y', height)
 			    .attr("x", function(d, i){ return (barWidth+barPadding)*i+margin+barWidth/2})
 			    .attr("text-anchor", "middle")
 			    .style('fill', 'white')
@@ -173,8 +183,6 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
                .attr('x', 100).attr('y', 100)
                .attr('font-family', '"Arial Black", Gadget, sans-serif')
                .attr('fill', "white").text("BPM: " + d.x0 + ' to '+d.x1);
-
-            
      
           }
 
