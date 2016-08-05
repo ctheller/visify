@@ -116,14 +116,14 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 		        	.attr('height', function(d){return height - yScale(d.length)})
 
 		      bar.append("text")
-			    .attr("dy", ".75em")
-			    .attr("y", height)
+			    .attr("font-size", barWidth/1.5)
+			    .attr("y", height+50)
 			    .attr("x", function(d, i){ return (barWidth+barPadding)*i+margin+barWidth/2})
 			    .attr("text-anchor", "middle")
 			    .text(function(d) { if (d.length) return d.length })
 		      	.transition()
 		        .duration(800)
-			    .attr("y", function(d){return yScale(d.length)+5})	
+			    .attr("y", function(d){return yScale(d.length)+barWidth/1.5})	
 
 		    // svg.selectAll('rect')
 		    // .on("mouseover", handleMouseOver)
