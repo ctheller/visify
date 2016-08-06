@@ -26,6 +26,8 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 		$scope.render($scope.tracks);
 	}
 
+	var keyNames = ['C','C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
 	var getSongs = function(){
 		SpotifyRetriever.getAudioFeaturesForMany()
 		.then(function(tracks){
@@ -33,6 +35,13 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 				return e.audio_features;
 			})
 			tracks = _.flatten(tracks);
+
+			//make duration in seconds milliseconds instead
+			tracks = tracks.map(function(d){
+  					d['duration_ms'] = d['duration_ms']/1000;
+  					return d;
+  				})
+
 			$scope.tracks = tracks;
 
 			$scope.tracks.sort(function(a,b){return b[$scope.metadata] - a[$scope.metadata]});
@@ -43,6 +52,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	}
 
 	d3Service.d3().then(function(d3) {
+
 		var svg = d3.select('#chart').attr('align', 'center')
 		.append('svg')        // create an <svg> element
 		.style('height', '100%')
@@ -73,6 +83,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 		$scope.render = function(data) {
 
 			svg.selectAll('*').remove();
+			d3.select("#pieChart").selectAll('*').remove();
 	 
 		    // If we don't pass any data, return out of the element
 		   	if (!data) return;
@@ -88,14 +99,6 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
   			var height = window.innerHeight-100;
   			var width = window.innerWidth;
 
-  			//Make seconds instead of milliseconds
-  			if ($scope.metadata==='duration_ms') {
-  				data = data.map(function(d){
-  					d[$scope.metadata] = d[$scope.metadata]/1000;
-  					return d;
-  				})
-  			}
-  				
 
   			var buckets = 40;
   			
@@ -187,15 +190,115 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 				            .on("mouseout", handleMouseOut)
 				            .on("click", handleClick);
 
+
+
+
+				// var dataset = [
+				//     { name: 'IE', percent: 39.10 },
+				//     { name: 'Chrome', percent: 32.51 },
+				//     { name: 'Safari', percent: 13.68 },
+				//     { name: 'Firefox', percent: 8.71 },
+				//     { name: 'Others', percent: 6.01 }
+				// ];
+
+				var totalDatapoints = 0;
+
+				keyArrays.forEach(function(d){
+					totalDatapoints += d.length;
+				})
+
+				var dataset = keyArrays.map(function(d, i){
+					d.percent = (d.length/totalDatapoints*100).toFixed(1);
+					d.keyName = (keyNames[i]);
+					return d;
+				})
+
+				 
+				var pie=d3.pie()
+				  .value(function(d){return d.percent})
+				  .sort(null)
+				  .padAngle(.03);
+				 
+				var w=300,h=300;
+				 
+				var outerRadius=w/2;
+				var innerRadius=100;
+				 
+				var piecolor = d3.scaleOrdinal(d3.schemeCategory20);
+				 
+				var arc=d3.arc()
+				  .outerRadius(outerRadius)
+				  .innerRadius(innerRadius);
+				 
+				// var svg2 = d3.select("#pieChart")
+				//   .append("svg")
+				//   .attr('width', w)
+				//   .attr('height', h)
+				//   .attr('class', 'shadow')
+				//   .append('g')
+				//   .attr('transform','translate('+w/2+','+h/2+')');
+
+				var group = svg.append('g')
+							.attr('width', 300)
+							.attr('height', 300)
+							.attr('x', 200)
+							.attr('y', 200)
+							.attr('transform', 'translate(200, 300)');
+
+				var path = group.selectAll('path')
+				  .data(pie(dataset))
+				  .enter()
+				  .append('path')
+				  .attr('d', arc)
+				  .attr('fill', function(d,i){return piecolor(d.data.keyName)});
+
+				  console.log(group);
+				 
+				 
+				path.transition()
+				  .duration(1000)
+				  .attrTween('d', function(d) {
+				      var interpolate = d3.interpolate({startAngle: 0, endAngle: 0}, d);
+				      return function(t) {
+				          return arc(interpolate(t));
+				      };
+				  });
+				 
+				 
+				var restOfTheData=function(){
+				    var text=group.selectAll('text')
+				        .data(pie(dataset))
+				        .enter()
+				        .append("text")
+				        .transition()
+				        .duration(200)
+				        .attr("transform", function (d) {
+				            return "translate(" + arc.centroid(d) + ")";
+				        })
+				        .attr("dy", ".4em")
+				        .attr("text-anchor", "middle")
+				        .text(function(d){
+				            return d.data.keyName + ": " + d.data.percent+"%";
+				        })
+				        .style('fill', '#fff')
+				        .style('font-size', '10px');
+				        
+				 
+				    var legendRectSize=20;
+				    var legendSpacing=7;
+				    var legendHeight=legendRectSize+legendSpacing;
+				 
+				 
+				};
+				 
+				setTimeout(restOfTheData,1000);
+
+
   			} else {
 
 			barWidth = (width-margin*2)/histo.length-barPadding;
-
-
-			console.log(histo);
-
 		 
-		//     // set the height based on the calculations above
+		    // set the height based on the calculations above
 		   	svg.attr('height', width);
 
 
@@ -258,11 +361,29 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 
             // Specify where to put label of text
 
-            svg.append("text")
+            var textInsert = "";
+
+            var toSecs = function(num) {
+            	if ((Math.round(num%60)).toString().length<2) return "0"+Math.round(num%60)
+            	return Math.round(num%60);
+            }
+
+            if ($scope.metadata === 'tempo') {
+            	textInsert = "BPM: " + d.x0 + ' to '+d.x1
+            } else if ($scope.metadata === 'duration_ms') {
+            	textInsert += Math.floor(d.x0/60) + ":" + toSecs(d.x0) + ' to ' + Math.floor(d.x1/60) + ":" + toSecs(d.x1)
+            } else if ($scope.metadata === 'key') {
+            	textInsert = keyNames[Math.round(d.x0)] +': '+d.length
+            } else {
+            	textInsert = d.x0.toFixed(2) + " to " + d.x1.toFixed(2);
+            }
+
+            console.log(d.x0);
+
+            d3.select('footer').append("text")
                .attr('id', "t" + i)
-               .attr('x', 100).attr('y', 100)
                .attr('font-family', '"Arial Black", Gadget, sans-serif')
-               .attr('fill', "white").text("BPM: " + d.x0 + ' to '+d.x1);
+               .style('color', "white").text(textInsert);
      
           }
 
