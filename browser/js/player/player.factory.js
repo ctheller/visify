@@ -34,7 +34,7 @@ app.factory('PlayerFactory', function ($rootScope) {
     audio.src = song.preview_url;
     audio.load();
     currentSong = song;
-    currentList = list;
+    currentList = list.filter(function(e){return e.preview_url});
     if (!song.preview_url) return player.next();
     player.resume();
   };

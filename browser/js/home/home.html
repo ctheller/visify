@@ -1,7 +1,7 @@
 <section id="home">  
 	<div id="toggles">
 	<img ng-show="currentSong" id="albumImage" ng-src="{{currentSong.album.images[0].url}}"><span ng-show="currentSong" ng-click="stopSong()"><b>{{currentSong.name| limitTo:30}}</b><span ng-if="currentSong.name.length > 30">...</span> - {{currentSong.artists[0].name}}</span>
-	<button ng-repeat="option in optionList" type="button" class="btn btn-default" ng-click="changeMeta(option.value)">{{option.name}}</button>
+	<button ng-show="tracks" ng-repeat="option in optionList" type="button" class="btn btn-success" ng-click="changeMeta(option.value)">{{option.name}}</button>
 	</div>
 
 	<div id="chart">

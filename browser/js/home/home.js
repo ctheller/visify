@@ -84,9 +84,9 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
         
   //       
 
+
   			var height = window.innerHeight-140;
   			var width = window.innerWidth;
-
 
   			//Make seconds instead of milliseconds
   			if ($scope.metadata==='duration_ms') {
@@ -221,7 +221,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 		       	.attr('fill', function(d) { return color(d); })
 		       	.attr('opacity', 1)
 		       	.transition()
-		         	.duration(800)
+		         	.duration(700)
 		         	.attr('y', function(d){return yScale(d.length)})
 		        	.attr('height', function(d){return height - yScale(d.length)})
 
@@ -231,10 +231,11 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 			    .attr('y', height)
 			    .attr("x", function(d, i){ return (barWidth+barPadding)*i+margin+barWidth/2})
 			    .attr("text-anchor", "middle")
-			    .style('fill', 'white')
+			    .style('fill', '#222222')
 			    .text(function(d) { if (d.length) return d.length })
 		      	.transition()
-		        .duration(800)
+		        .duration(700)
+		        .style('fill', 'white')
 			    .attr("y", function(d){return yScale(d.length)-barWidth/5})	
 
 		    svg.selectAll('rect')

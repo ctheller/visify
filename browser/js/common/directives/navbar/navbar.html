@@ -5,11 +5,14 @@
         </div>
         <ul class="nav navbar-nav">
         </ul>
-        <a ng-show="!user" href="/auth/spotify" class="btn login-button">Login with Spotify</a>
+
         <div ng-show="user" class="welcome">
             <span id="welcome-msg">Welcome, {{ user.display_name }}!</span>
             <img class="img-circle" src="{{user.images[0].url}}">
             <a ng-click="logout()">Logout</a>
         </div>
     </div>
+
+    <a ng-show="!user" href="/auth/spotify" class="login-button"><img id="spotify-icon" src="/spotify-icon.png">Login with Spotify</a>
 </nav>
+
