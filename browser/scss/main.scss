@@ -19,13 +19,12 @@ body {
   margin-left: 40px;
 }
 
-.btn-group {
-  float: right;
-  padding: 20px 20px 0 0;
-  .btn {
+.btn {
     border-radius: 0;
+    margin-left: 1px;
+    float: right;
+
   }
-}
 
 #chart {
   height: 100vh;
@@ -38,8 +37,8 @@ body {
 #toggles {
   button {
     background-color: #59b300;
-    border-color: #009900;
-    border-width: 1px;
+    border: none;
+    border-radius: 2px;
   }
   span {
     padding-left: 20px;

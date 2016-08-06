@@ -62,10 +62,15 @@ app.factory('SpotifyRetriever', function(AuthService, Spotify, $log){
     //     })
     // }   
 
+    var trySeveral = 0;
+
     SpotifyRetriever.getSavedTracks = function(){
         var recWrap = function(i){
             return Spotify.getSavedUserTracks({limit:50, offset:i})
             .then(function(tracks){
+
+                trySeveral = 0;
+
                 if (tracks.items.length) {
                     return recWrap(i+50)
                     .then(function(moreTracks){
@@ -74,7 +79,14 @@ app.factory('SpotifyRetriever', function(AuthService, Spotify, $log){
                 }
                 return [];
             }) 
-            .catch($log);
+            .catch(function(err){
+                if (err && trySeveral < 4) {
+                    trySeveral++;
+                    return SpotifyRetriever.getSavedTracks()
+                }
+                trySeveral = 0;
+                $log(err);
+            });
         }
         return recWrap(0);
     }
