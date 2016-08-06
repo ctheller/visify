@@ -110,6 +110,83 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 			// var histo = histogram(data.map(function(d){return d[$scope.metadata]));
 			var histo = histogram.value(function(d){return d[$scope.metadata]})(data);
 
+  			//Check if for "Key"
+  			if ($scope.metadata==='key') {
+
+  				var keyArrays = histo.filter(function(e){return e.length});
+
+
+  				var j = (width-2*margin)/(300);
+
+  				var keyOrder = [0,2,4,5,7,9,11,1,3,6,8,10] //white then black keys
+
+  				var mappedData = Array(9);
+  				
+  				for (var m = 0; m< 12; m++) {
+  					var idx = keyOrder.indexOf(m);
+  					mappedData[idx] = keyArrays[m];
+  				}
+
+	  			for (var i = 0; i < 7; i++) {
+	  			svg.append('rect')
+	  				.attr('id', 'key'+ keyOrder[i])
+	  				.style('fill', 'white')
+	  				.style('stroke', 'black')
+	  				.attr('x', j*23*i + margin)
+	  				.attr('y', 20)
+	  				.attr('width', j*23)
+	  				.attr('height', j*120)
+	  			}
+
+	  			svg.append('rect')
+	  				.attr('id', 'key2')
+	  				.style('fill', 'black')
+	  				.style('stroke', 'black')
+	  				.attr('x', j*14.33333 + margin)
+	  				.attr('y', 20)
+	  				.attr('width', j*13)
+	  				.attr('height', j*80);
+	  			svg.append('rect')
+	  				.attr('id', 'key4')
+	  				.style('fill', 'black')
+	  				.style('stroke', 'black')
+	  				.attr('x', j*41.66666 + margin)
+	  				.attr('y', 20)
+	  				.attr('width', j*13)
+	  				.attr('height', j*80);
+	  			svg.append('rect')
+	  				.attr('id', 'key7')
+	  				.style('fill', 'black')
+	  				.style('stroke', 'black')
+	  				.attr('x', j*82.25 + margin)
+	  				.attr('y', 20)
+	  				.attr('width', j*13)
+	  				.attr('height', j*80);
+	  			svg.append('rect')
+	  				.attr('id', 'key9')
+	  				.style('fill', 'black')
+	  				.style('stroke', 'black')
+	  				.attr('x', j*108.25 + margin)
+	  				.attr('y', 20)
+	  				.attr('width', j*13)
+	  				.attr('height', j*80);
+	  			svg.append('rect')
+	  				.attr('id', 'key11')
+	  				.style('fill', 'black')
+	  				.style('stroke', 'black')
+	  				.attr('x', j*134.75 + margin)
+	  				.attr('y', 20)
+	  				.attr('width', j*13)
+	  				.attr('height', j*80);
+
+	  			var keyVals = d3.select('svg').selectAll('rect')
+	  						.data(mappedData)
+	  						.on("mouseover", handleMouseOver)
+				            .on("mouseout", handleMouseOut)
+				            .on("click", handleClick);
+
+  			} else {
+
 			barWidth = (width-margin*2)/histo.length-barPadding;
 
 
@@ -166,15 +243,15 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
             .on("click", handleClick);
 
  
+ 		}
 		};
 
 	function handleMouseOver(d, i) {  // Add interactivity
 
-            // Use D3 to select element, change color and size
-            d3.select(this).attr('opacity', .5)
-
-
-
+			if ($scope.metadata!='key') {
+	            // Use D3 to select element, change color and size
+	            d3.select(this).attr('opacity', .5)
+        	}
 
             // Specify where to put label of text
 
@@ -187,14 +264,28 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
           }
 
 	function handleMouseOut(d, i) {
-	    // Use D3 to select element, change color back to normal
-	    d3.select(this).attr('opacity', 1)
+	   
+		if ($scope.metadata!='key') {
+	   		// Use D3 to select element, change color back to normal
+	    	d3.select(this).attr('opacity', 1)
+		}
 
 	    // // Select text by id and then remove
 	    d3.select("#t" + i).remove();  // Remove text location
 	  }
 
 	  function handleClick(d, i) {
+
+	  		if ($scope.metadata==='key') {
+	  			var color = (d3.select(this).style('fill'));
+
+	  			d3.select(this)
+	  				.style('fill', 'red')
+	  				.transition()
+	  				.duration(800)
+	  				.style('fill', color);
+
+	  		}
 
 			//Get track name and preview URL etc for selection.
             var trackIds = d.map(function(t){return t.id});
@@ -207,6 +298,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 		    })
 
 	  }
+
 
 	});
 
