@@ -1,8 +1,13 @@
 <section id="home">  
 	<div id="toggles">
-	<img ng-show="currentSong" id="albumImage" ng-src="{{currentSong.album.images[0].url}}"><span ng-show="currentSong" ng-click="stopSong()"><b>{{currentSong.name| limitTo:30}}</b><span ng-if="currentSong.name.length > 30">...</span> - {{currentSong.artists[0].name}}</span>
-	<button ng-show="tracks" ng-repeat="option in optionList" type="button" class="btn btn-success" ng-click="changeMeta(option.value)">{{option.name}}</button>
-	</div>
+	<span ng-show="currentSong" ng-click="stopSong()"><img id="albumImage" ng-src="{{currentSong.album.images[0].url}}"><b>{{currentSong.name| limitTo:30}}</b><span ng-if="currentSong.name.length > 30">...</span> - {{currentSong.artists[0].name}}</span>
+
+		<div ng-show='tracks' id="vert-buttons" class="ui vertical buttons">
+		  <button ng-repeat="option in optionList" class="ui button" ng-click="changeMeta(option.value)">{{option.name}}</button>
+		</div>
+
+	
+    </div>
 
 	<div id="chart">
 	<span us-spinner="{radius:30, width:8, length: 16}"></span>

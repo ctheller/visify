@@ -16,18 +16,9 @@ body {
 
 #albumImage {
   width: 50px;
-  margin-left: 40px;
+  margin-left: 22px;
+  padding-right: 10px;
 }
-
-.btn {
-    background-color: #59b300;
-    border-radius: 0;
-    margin-left: 1px;
-    float: right;
-    border-radius: 2px;
-    border: none;
-  }
-
 
 #chart {
   height: 100vh;
@@ -38,14 +29,27 @@ body {
 }
 
 #toggles {
-  button.btn.btn-success {
+  
+  #vert-buttons {
+    display: inline-block;
+    position: absolute;
+    right: 35px;
+    top: 55px;
+    width: 200px;
+    float: right;
+  }
+  .ui.button {
+    background-color: rgba(89,179,20, .5);
+    display: block;
+    float: right;
+    border: none;
+    margin-right: 0;
     &:focus, &:hover, &:active, .active {
-    background-color: #399300;
-    outline: none;
+      background-color: #399300;
+      outline: none;
     }
   }
   span {
-    padding-left: 20px;
     color: white;
   }
 }

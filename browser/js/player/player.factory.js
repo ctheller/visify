@@ -112,7 +112,8 @@ app.factory('PlayerFactory', function ($rootScope) {
   // audio event listening
 
   audio.addEventListener('ended', function () {
-    player.next();
+    player.pause();
+    currentSong = null;
     $rootScope.$evalAsync();
     $rootScope.$broadcast('songChange');
   });

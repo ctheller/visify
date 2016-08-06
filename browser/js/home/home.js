@@ -118,6 +118,8 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 
   				var j = (width-2*margin)/(300);
 
+  				var keyMargin = (width - (j*161))/2;
+
   				var keyOrder = [0,2,4,5,7,9,11,1,3,6,8,10] //white then black keys
 
   				var mappedData = Array(9);
@@ -132,7 +134,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	  				.attr('id', 'key'+ keyOrder[i])
 	  				.style('fill', 'white')
 	  				.style('stroke', 'black')
-	  				.attr('x', j*23*i + margin)
+	  				.attr('x', j*23*i + keyMargin)
 	  				.attr('y', 20)
 	  				.attr('width', j*23)
 	  				.attr('height', j*120)
@@ -142,7 +144,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	  				.attr('id', 'key2')
 	  				.style('fill', 'black')
 	  				.style('stroke', 'black')
-	  				.attr('x', j*14.33333 + margin)
+	  				.attr('x', j*14.33333 + keyMargin)
 	  				.attr('y', 20)
 	  				.attr('width', j*13)
 	  				.attr('height', j*80);
@@ -150,7 +152,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	  				.attr('id', 'key4')
 	  				.style('fill', 'black')
 	  				.style('stroke', 'black')
-	  				.attr('x', j*41.66666 + margin)
+	  				.attr('x', j*41.66666 + keyMargin)
 	  				.attr('y', 20)
 	  				.attr('width', j*13)
 	  				.attr('height', j*80);
@@ -158,7 +160,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	  				.attr('id', 'key7')
 	  				.style('fill', 'black')
 	  				.style('stroke', 'black')
-	  				.attr('x', j*82.25 + margin)
+	  				.attr('x', j*82.25 + keyMargin)
 	  				.attr('y', 20)
 	  				.attr('width', j*13)
 	  				.attr('height', j*80);
@@ -166,7 +168,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	  				.attr('id', 'key9')
 	  				.style('fill', 'black')
 	  				.style('stroke', 'black')
-	  				.attr('x', j*108.25 + margin)
+	  				.attr('x', j*108.25 + keyMargin)
 	  				.attr('y', 20)
 	  				.attr('width', j*13)
 	  				.attr('height', j*80);
@@ -174,7 +176,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	  				.attr('id', 'key11')
 	  				.style('fill', 'black')
 	  				.style('stroke', 'black')
-	  				.attr('x', j*134.75 + margin)
+	  				.attr('x', j*134.75 + keyMargin)
 	  				.attr('y', 20)
 	  				.attr('width', j*13)
 	  				.attr('height', j*80);
