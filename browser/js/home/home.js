@@ -19,7 +19,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 						{name: "Key", value: 'key'}]
 						
 
-	$scope.metadata = 'duration_ms';
+	$scope.metadata = 'danceability';
 
 	$scope.changeMeta = function(string){
 		$scope.metadata = string;
@@ -85,7 +85,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
   //       
 
 
-  			var height = window.innerHeight-140;
+  			var height = window.innerHeight-100;
   			var width = window.innerWidth;
 
   			//Make seconds instead of milliseconds

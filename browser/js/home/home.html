@@ -1,9 +1,9 @@
 <section id="home">  
 	<div id="toggles">
-	<span ng-show="currentSong" ng-click="stopSong()"><img id="albumImage" ng-src="{{currentSong.album.images[0].url}}"><b>{{currentSong.name| limitTo:30}}</b><span ng-if="currentSong.name.length > 30">...</span> - {{currentSong.artists[0].name}}</span>
+	<span ng-show="currentSong" id="player" ng-click="stopSong()"><img id="albumImage" ng-src="{{currentSong.album.images[0].url}}"><b>{{currentSong.name| limitTo:30}}</b><span ng-if="currentSong.name.length > 30">...</span> - {{currentSong.artists[0].name}}</span>
 
 		<div ng-show='tracks' id="vert-buttons" class="ui vertical buttons">
-		  <button ng-repeat="option in optionList" class="ui button" ng-click="changeMeta(option.value)">{{option.name}}</button>
+		  <button ng-repeat="option in optionList" class="ui button" ng-click="changeMeta(option.value)" ng-class="metadata===option.value ? 'active' : ''">{{option.name}}</button>
 		</div>
 
 	
