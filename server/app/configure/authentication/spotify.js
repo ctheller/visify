@@ -11,7 +11,7 @@ module.exports = function (app, db) {
     var spotifyCredentials = {
         clientID: spotifyConfig.clientID,
         clientSecret: spotifyConfig.clientSecret,
-        callbackURL: "http://localhost:1337/auth/spotify/callback"
+        callbackURL: spotifyConfig.callbackURL
     };
 
     var verifyCallback = function (accessToken, refreshToken, profile, done) {
