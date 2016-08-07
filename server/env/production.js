@@ -7,7 +7,7 @@
  */
 
 module.exports = {
-    "DATABASE_URI": process.env.DATABASE_URI,
+    "DATABASE_URI": process.env.DATABASE_URL,
     "SESSION_SECRET": process.env.SESSION_SECRET,
     "TWITTER": {
         "consumerKey": process.env.TWITTER_CONSUMER_KEY,
@@ -25,9 +25,9 @@ module.exports = {
         "callbackURL": process.env.GOOGLE_CALLBACK_URL
     },
     "SPOTIFY": {
-        "clientID": process.env.SPOTIFY_CLIENT_ID,
-        "clientSecret": process.env.SPOTIFY_CLIENT_SECRET,
-        "callbackURL": process.env.SPOTIFY_CALLBACK_URL
+        "clientID": "520d464cc816444a88f7771d3a9ba61c",
+        "clientSecret": "8590dc7384f64ae5aa9db046a23f6ea4",
+        "callbackURL": "http://localhost:1337/auth/callback/spotify"
     },
     "LOGGING": true
 };
