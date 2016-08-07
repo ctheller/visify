@@ -27,7 +27,7 @@ module.exports = {
     "SPOTIFY": {
         "clientID": "520d464cc816444a88f7771d3a9ba61c",
         "clientSecret": "8590dc7384f64ae5aa9db046a23f6ea4",
-        "callbackURL": "http://localhost:1337/auth/callback/spotify"
+        "callbackURL": "http://visify.herokuapp.com/auth/callback/spotify"
     },
     "LOGGING": true
 };
