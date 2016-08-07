@@ -48,13 +48,14 @@ body {
       }
   }
   .ui.button {
-    background-color: rgba(89,179,20, .5);
+    background-color: rgba(40,100,03, .7);
     display: block;
+    color: black;
     float: right;
     border: none;
     margin-right: 0;
     &:focus, &:hover, &:active {
-      background-color: #399300;
+      background-color: rgba(22,58,0, 1);
       outline: none;
     }
   }

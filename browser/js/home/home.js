@@ -79,6 +79,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 
 		// Use the category20() scale function for multicolor support
         var color = d3.scaleOrdinal(d3.schemeCategory20);
+        var piecolor = d3.scaleOrdinal(d3.schemeCategory20);
 
 		$scope.render = function(data) {
 
@@ -118,10 +119,25 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 
   				var keyArrays = histo.filter(function(e){return e.length});
 
+  				var totalDatapoints = 0;
+
+				keyArrays.forEach(function(d){
+					totalDatapoints += d.length;
+				})
+
+  				keyArrays = keyArrays.map(function(d, i){
+					d.percent = (d.length/totalDatapoints*100).toFixed(1);
+					d.keyName = (keyNames[i]);
+					return d;
+				})
+
 
   				var j = (width-2*margin)/(300);
 
-  				var keyMargin = (width - (j*161))/2;
+
+  				var keyMargin;
+  				if (width > 800) keyMargin = (width - (j*161))/2+ 100;
+  				else keyMargin = 30;
 
   				var keyOrder = [0,2,4,5,7,9,11,1,3,6,8,10] //white then black keys
 
@@ -192,27 +208,6 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 
 
 
-
-				// var dataset = [
-				//     { name: 'IE', percent: 39.10 },
-				//     { name: 'Chrome', percent: 32.51 },
-				//     { name: 'Safari', percent: 13.68 },
-				//     { name: 'Firefox', percent: 8.71 },
-				//     { name: 'Others', percent: 6.01 }
-				// ];
-
-				var totalDatapoints = 0;
-
-				keyArrays.forEach(function(d){
-					totalDatapoints += d.length;
-				})
-
-				var dataset = keyArrays.map(function(d, i){
-					d.percent = (d.length/totalDatapoints*100).toFixed(1);
-					d.keyName = (keyNames[i]);
-					return d;
-				})
-
 				 
 				var pie=d3.pie()
 				  .value(function(d){return d.percent})
@@ -223,30 +218,23 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 				 
 				var outerRadius=w/2;
 				var innerRadius=100;
-				 
-				var piecolor = d3.scaleOrdinal(d3.schemeCategory20);
+				
 				 
 				var arc=d3.arc()
 				  .outerRadius(outerRadius)
 				  .innerRadius(innerRadius);
 				 
-				// var svg2 = d3.select("#pieChart")
-				//   .append("svg")
-				//   .attr('width', w)
-				//   .attr('height', h)
-				//   .attr('class', 'shadow')
-				//   .append('g')
-				//   .attr('transform','translate('+w/2+','+h/2+')');
+				
 
 				var group = svg.append('g')
-							.attr('width', 300)
-							.attr('height', 300)
 							.attr('x', 200)
 							.attr('y', 200)
-							.attr('transform', 'translate(200, 300)');
+
+				if (width < 800) group.attr('transform', 'translate(200, 400)');
+				else group.attr('transform', 'translate(200, 250)');
 
 				var path = group.selectAll('path')
-				  .data(pie(dataset))
+				  .data(pie(keyArrays))
 				  .enter()
 				  .append('path')
 				  .attr('d', arc)
@@ -266,8 +254,8 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 				 
 				 
 				var restOfTheData=function(){
-				    var text=group.selectAll('text')
-				        .data(pie(dataset))
+				    var text = group.selectAll('text')
+				        .data(pie(keyArrays))
 				        .enter()
 				        .append("text")
 				        .transition()
@@ -357,6 +345,9 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 			if ($scope.metadata!='key') {
 	            // Use D3 to select element, change color and size
 	            d3.select(this).attr('opacity', .5)
+        	} else {
+        		this.color = d3.select(this).style('fill');
+        		d3.select(this).style('fill', piecolor(d.keyName))
         	}
 
             // Specify where to put label of text
@@ -375,10 +366,9 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
             } else if ($scope.metadata === 'key') {
             	textInsert = keyNames[Math.round(d.x0)] +': '+d.length
             } else {
-            	textInsert = d.x0.toFixed(2) + " to " + d.x1.toFixed(2);
+            	textInsert = "Percentile: " + Math.round((d.x0 + d.x1)/2*100) + "%";
             }
 
-            console.log(d.x0);
 
             d3.select('footer').append("text")
                .attr('id', "t" + i)
@@ -392,6 +382,8 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 		if ($scope.metadata!='key') {
 	   		// Use D3 to select element, change color back to normal
 	    	d3.select(this).attr('opacity', 1)
+		} else {
+			d3.select(this).style('fill', this.color);
 		}
 
 	    // // Select text by id and then remove
@@ -401,13 +393,14 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	  function handleClick(d, i) {
 
 	  		if ($scope.metadata==='key') {
-	  			var color = (d3.select(this).style('fill'));
 
 	  			d3.select(this)
-	  				.style('fill', 'red')
+	  				.style('fill', d3.color(piecolor(d.keyName)).darker(2))
 	  				.transition()
-	  				.duration(800)
-	  				.style('fill', color);
+	  				.duration(400)
+	  				.transition()
+	  				.duration(600)
+	  				.style('fill', this.color);
 
 	  		}
 
@@ -434,15 +427,6 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 		PlayerFactory.pause();
 		$scope.currentSong = null;
 	}
-
-
-
-
-
-
-	// svg.append('g')            // create a <g> element
-	//   .attr('class', 'x axis') // specify classes
-	//   .call(xAxis);            // let the axis do its thing
 
 
 
