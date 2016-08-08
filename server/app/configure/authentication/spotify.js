@@ -49,7 +49,7 @@ module.exports = function (app, db) {
 
     passport.use(new SpotifyStrategy(spotifyCredentials, verifyCallback));
 
-    app.get('/auth/spotify', passport.authenticate('spotify', {scope: ['user-read-email', 'playlist-read-private', 'playlist-modify-public', 'playlist-modify-private', 'user-read-private', 'user-library-read', 'user-library-modify', 'user-follow-modify', 'user-follow-read'] }));
+    app.get('/auth/spotify', passport.authenticate('spotify', {scope: ['user-read-email', 'playlist-read-private', 'user-read-private', 'user-library-read'] }));
 
     app.get('/auth/spotify/callback',
         passport.authenticate('spotify', {failureRedirect: '/login'}),
