@@ -1,4 +1,4 @@
-app.factory('SpotifyRetriever', function(AuthService, Spotify, $log){
+app.factory('SpotifyRetriever', function(AuthService, Spotify, $log, $q){
 
     var SpotifyRetriever = {};
 
@@ -29,6 +29,8 @@ app.factory('SpotifyRetriever', function(AuthService, Spotify, $log){
         return recWrap(0);
     }
 
+    //retreive all
+
     //Retrieves ALL songs from a given playlist
     SpotifyRetriever.getPlaylistSongs = function(userId, playlistId){
         var recWrap = function(i){
@@ -51,16 +53,53 @@ app.factory('SpotifyRetriever', function(AuthService, Spotify, $log){
         return recWrap(0);
     }
 
-    // //Retreives All Songs from All Playlists
-    // SpotifyRetriever.getAllPlaylistSongs = function(userId){
-    //     return SpotifyRetriever.getAllPlaylists(userId)
-    //     .then(function(playlists){
-    //         var gettingSongs = playlists.forEach(function(playlist){
-    //             return SpotifyRetriever.getPlaylistSongs(userId, playlist.id)
-    //         })
-    //         return Promise.all(gettingSongs);
-    //     })
-    // }   
+    //Retreives All Songs from All Playlists  //THIS NOW WORKS FOR GETTING ALL SONGS AND AUDIO FEATURESSSSSSS!!!!
+    SpotifyRetriever.getAllPlaylistSongs = function(userId){
+        return SpotifyRetriever.getAllPlaylists(userId)
+        .then(function(playlists){
+            var i = 0;
+            var gettingSongs = playlists.map(function(playlist){
+
+                if (userId !== playlist.owner.id) return $q.when([]);
+                function delay() {
+                    var promise = new Promise(function(resolve, reject){
+                        window.setTimeout(function(){
+                            resolve(SpotifyRetriever.getPlaylistSongs(userId, playlist.id));
+                        }, 250*i);
+                        i++;
+                    });
+                    return promise;
+                };
+                return delay();
+
+            })
+
+            var allTracks;
+            return Promise.all(gettingSongs).then(function(songs){
+                    return _.flatten(songs);
+                }).then(function(tracks){
+                    allTracks = tracks;
+                    return tracks.map(function(track){
+                        return track.id
+                    })
+                })
+                .then(function(trackIds){
+                    var trackIdsChunked = _.chunk(trackIds, 100);
+                    var gettingFeatures = trackIdsChunked.map(function(chunk){
+                        return Spotify.getTracksAudioFeatures(chunk, {market:"US"});
+                    })
+                    return Promise.all(gettingFeatures);
+                })
+                .then(function(allTracksFeatures){
+                    allTracksFeatures = _.flatten(allTracksFeatures.map(function(e){return e.audio_features}))
+                    var mergedTrackInfo = _.map(allTracks, function(item){
+                        return _.extend(item, _.findWhere(allTracksFeatures, {id: item.id}));
+                    })
+                    return mergedTrackInfo;
+                })
+
+        })
+    }   
 
     var trySeveral = 0;
 
