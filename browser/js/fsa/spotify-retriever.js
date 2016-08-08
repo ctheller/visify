@@ -1,4 +1,4 @@
-app.factory('SpotifyRetriever', function(AuthService, Spotify, $log){
+app.factory('SpotifyRetriever', function(AuthService, Spotify, $log, $q){
 
     var SpotifyRetriever = {};
 
@@ -29,8 +29,11 @@ app.factory('SpotifyRetriever', function(AuthService, Spotify, $log){
         return recWrap(0);
     }
 
+    //retreive all
+
     //Retrieves ALL songs from a given playlist
     SpotifyRetriever.getPlaylistSongs = function(userId, playlistId){
+        console.log("hit");
         var recWrap = function(i){
             return Spotify.getPlaylistTracks(userId, playlistId, {market:"US", offset:i})
             .then(function(songs){
@@ -51,16 +54,23 @@ app.factory('SpotifyRetriever', function(AuthService, Spotify, $log){
         return recWrap(0);
     }
 
-    // //Retreives All Songs from All Playlists
-    // SpotifyRetriever.getAllPlaylistSongs = function(userId){
-    //     return SpotifyRetriever.getAllPlaylists(userId)
-    //     .then(function(playlists){
-    //         var gettingSongs = playlists.forEach(function(playlist){
-    //             return SpotifyRetriever.getPlaylistSongs(userId, playlist.id)
-    //         })
-    //         return Promise.all(gettingSongs);
-    //     })
-    // }   
+    //Retreives All Songs from All Playlists  //****HAVING TROUBLE WITH SETTING AN ARBITRARY DELAY AND STILL GETTING A RETURN
+    SpotifyRetriever.getAllPlaylistSongs = function(userId){
+        return SpotifyRetriever.getAllPlaylists(userId)
+        .then(function(playlists){
+            var i = 0;
+            var gettingSongs = playlists.forEach(function(playlist){
+                if (userId !== playlist.owner.id) return [];
+                var theReturn;
+                function delay() {window.setTimeout(slowGetSongs, 300*i); i++}
+                function slowGetSongs () {theReturn = SpotifyRetriever.getPlaylistSongs(userId, playlist.id)}
+                return delay().then(function(){
+                    console.log(theReturn);
+                })
+            })
+            return Promise.all(gettingSongs);
+        })
+    }   
 
     var trySeveral = 0;
 

@@ -7,6 +7,14 @@ app.config(function ($stateProvider) {
 });
 
 app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetriever, AUTH_EVENTS, $log, d3Service, PlayerFactory){
+
+
+	$scope.clicky = function(){
+		SpotifyRetriever.getAllPlaylistSongs($rootScope.user.id)
+		.then(function(songs){
+			console.log("SONGS?", songs);
+		})
+	}
 	
 	$scope.optionList = [{name: 'Danceability',value:'danceability'}, 
 						{name: 'Tempo',value:'tempo'}, 

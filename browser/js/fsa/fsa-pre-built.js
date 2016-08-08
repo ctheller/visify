@@ -62,6 +62,7 @@
             }) 
             .catch($log); 
 
+
             return data.user;
         }
 
