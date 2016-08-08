@@ -6,6 +6,13 @@ body {
   background: #fdfdfd;
 }
 
+#analyzing {
+  color: white;
+  display: block;
+  margin-top: 200px;
+  font-size: 30px;
+}
+
 @mixin clearfix {
   &:after {
     content: "";

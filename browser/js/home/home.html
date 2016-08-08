@@ -1,5 +1,5 @@
 <section id="home">  
-	<button ng-click="clicky()"><span>Wow</span></button>
+	<!-- <button ng-click="clicky()"><span>Wow</span></button> -->
 	<div id="toggles">
 	<span ng-show="currentSong" id="player" ng-click="stopSong()"><span style="color: gray; padding-left: 20px" class="glyphicon glyphicon-remove
 "></span><img id="albumImage" ng-src="{{currentSong.album.images[0].url}}"><b>{{currentSong.name| limitTo:50}}</b><span ng-if="currentSong.name.length > 50">...</span> - {{currentSong.artists[0].name}}</span>
@@ -14,6 +14,7 @@
 
 	<div id="chart">
 	<span us-spinner="{radius:30, width:8, length: 16}"></span>
+	<span id="analyzing" ng-show="user && !tracks">Analyzing your playlists...</span>
 
 
 <div class="widget">
