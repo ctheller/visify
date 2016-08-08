@@ -292,18 +292,12 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 			    .domain([0, d3.max(histo, function(d) { return d.length; })])
 			    .range([height, 65]);
 
-			//var formatCount = d3.format(",.0f")
 
 			var bar = svg.selectAll(".bar")
 			    .data(histo)
 			 	.enter().append("g")
 			    .attr("class", "bar")
-			    //.attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
-		 
-		//     //create the rectangles for the bar chart
-		   	// svg.selectAll('rect')
-		    //  	.data(data).enter()
-
+	
 		      bar.append('rect')
 		       	.attr('width', barWidth)
 		       	.attr('height', 0)
