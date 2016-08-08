@@ -97,7 +97,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
   //       
 
 
-  			var height = window.innerHeight-100;
+  			var height = window.innerHeight-90;
   			var width = window.innerWidth;
 
 
@@ -154,7 +154,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	  				.style('fill', 'white')
 	  				.style('stroke', 'black')
 	  				.attr('x', j*23*i + keyMargin)
-	  				.attr('y', 20)
+	  				.attr('y', 45)
 	  				.attr('width', j*23)
 	  				.attr('height', j*120)
 	  			}
@@ -164,7 +164,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	  				.style('fill', 'black')
 	  				.style('stroke', 'black')
 	  				.attr('x', j*14.33333 + keyMargin)
-	  				.attr('y', 20)
+	  				.attr('y', 45)
 	  				.attr('width', j*13)
 	  				.attr('height', j*80);
 	  			svg.append('rect')
@@ -172,7 +172,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	  				.style('fill', 'black')
 	  				.style('stroke', 'black')
 	  				.attr('x', j*41.66666 + keyMargin)
-	  				.attr('y', 20)
+	  				.attr('y', 45)
 	  				.attr('width', j*13)
 	  				.attr('height', j*80);
 	  			svg.append('rect')
@@ -180,7 +180,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	  				.style('fill', 'black')
 	  				.style('stroke', 'black')
 	  				.attr('x', j*82.25 + keyMargin)
-	  				.attr('y', 20)
+	  				.attr('y', 45)
 	  				.attr('width', j*13)
 	  				.attr('height', j*80);
 	  			svg.append('rect')
@@ -188,7 +188,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	  				.style('fill', 'black')
 	  				.style('stroke', 'black')
 	  				.attr('x', j*108.25 + keyMargin)
-	  				.attr('y', 20)
+	  				.attr('y', 45)
 	  				.attr('width', j*13)
 	  				.attr('height', j*80);
 	  			svg.append('rect')
@@ -196,7 +196,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	  				.style('fill', 'black')
 	  				.style('stroke', 'black')
 	  				.attr('x', j*134.75 + keyMargin)
-	  				.attr('y', 20)
+	  				.attr('y', 45)
 	  				.attr('width', j*13)
 	  				.attr('height', j*80);
 
@@ -240,9 +240,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 				  .attr('d', arc)
 				  .attr('fill', function(d,i){return piecolor(d.data.keyName)});
 
-				  console.log(group);
-				 
-				 
+				 				 
 				path.transition()
 				  .duration(1000)
 				  .attrTween('d', function(d) {
@@ -292,7 +290,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 
 			var yScale = d3.scaleLinear()
 			    .domain([0, d3.max(histo, function(d) { return d.length; })])
-			    .range([height, 20]);
+			    .range([height, 65]);
 
 			//var formatCount = d3.format(",.0f")
 

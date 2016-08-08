@@ -53,8 +53,6 @@
         function onSuccessfulLogin(response) {
             var data = response.data;
             Session.create(data.id, data.user);   
-
-            console.log("ACCESS TOKEN:");        
             
             if (!Spotify.authToken) Spotify.setAuthToken(data.user.access_token);
             Spotify.getCurrentUser()

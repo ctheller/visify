@@ -18,7 +18,6 @@ app.directive('navbar', function ($rootScope, AuthService, AUTH_EVENTS, $state, 
 
             var setUser = function () {
                 scope.user = $rootScope.user;
-                console.log('hit');
             };
 
             var removeUser = function () {

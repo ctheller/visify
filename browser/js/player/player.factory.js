@@ -105,8 +105,6 @@ app.factory('PlayerFactory', function ($rootScope) {
       currentSong = randomList[0];
       player.resume();
     }
-    console.log(randomList);
-    console.log(currentList);
   }
 
   // audio event listening

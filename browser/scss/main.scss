@@ -16,13 +16,22 @@ body {
 
 #player {
   position: absolute;
-  top: 50px;
+  top: 45px;
+}
+
+.black {
+  color: black;
 }
 
 #albumImage {
   width: 50px;
-  margin-left: 22px;
+  margin-left: 4px;
   padding-right: 10px;
+}
+
+#remove {
+  margin-left: 15px;
+  color: black;
 }
 
 #chart {
