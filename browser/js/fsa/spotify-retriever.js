@@ -65,7 +65,7 @@ app.factory('SpotifyRetriever', function(AuthService, Spotify, $log, $q){
                     var promise = new Promise(function(resolve, reject){
                         window.setTimeout(function(){
                             resolve(SpotifyRetriever.getPlaylistSongs(userId, playlist.id));
-                        }, 400*i);
+                        }, 300*i);
                         i++;
                     });
                     return promise;
@@ -78,17 +78,18 @@ app.factory('SpotifyRetriever', function(AuthService, Spotify, $log, $q){
             return Promise.all(gettingSongs).then(function(songs){
                     return _.flatten(songs);
                 }).then(function(tracks){
-                    allTracks = tracks;
-                    return tracks.map(function(track){
+                    allTracks = _.uniq(tracks, 'id');
+                    return allTracks.map(function(track){
                         return track.id
                     })
                 })
                 .then(function(trackIds){
                     var trackIdsChunked = _.chunk(trackIds, 100);
                     var gettingFeatures = trackIdsChunked.map(function(chunk){
-                        return Spotify.getTracksAudioFeatures(chunk, {market:"US"});
+                        chunk = _.compact(chunk);
+                        return Spotify.getTracksAudioFeatures(chunk, {market:"US"})
                     })
-                    return Promise.all(gettingFeatures);
+                    return Promise.all(gettingFeatures)
                 })
                 .then(function(allTracksFeatures){
                     allTracksFeatures = _.flatten(allTracksFeatures.map(function(e){return e.audio_features}))
@@ -97,6 +98,7 @@ app.factory('SpotifyRetriever', function(AuthService, Spotify, $log, $q){
                     })
                     return mergedTrackInfo;
                 })
+
 
         })
     }   

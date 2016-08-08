@@ -40,6 +40,8 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	var getSongs = function(){
 		SpotifyRetriever.getAllPlaylistSongs($rootScope.user.id)
 		.then(function(tracks){
+
+			// console.log("TRACKS: ",tracks);
 		
 			//make duration in seconds milliseconds instead
 			tracks = tracks.map(function(d){
@@ -53,7 +55,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 
 			$scope.render($scope.tracks);
 		})
-		.catch($log);
+		
 	}
 
 	d3Service.d3().then(function(d3) {
