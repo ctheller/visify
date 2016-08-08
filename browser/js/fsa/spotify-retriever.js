@@ -65,7 +65,7 @@ app.factory('SpotifyRetriever', function(AuthService, Spotify, $log, $q){
                     var promise = new Promise(function(resolve, reject){
                         window.setTimeout(function(){
                             resolve(SpotifyRetriever.getPlaylistSongs(userId, playlist.id));
-                        }, 300*i);
+                        }, 400*i);
                         i++;
                     });
                     return promise;
