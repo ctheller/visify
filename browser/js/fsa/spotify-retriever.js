@@ -16,6 +16,7 @@ app.factory('SpotifyRetriever', function(AuthService, Spotify, $log, $q){
         var recWrap = function(i){
             return Spotify.getUserPlaylists(id, {limit:50, offset:i})
             .then(function(playlists){
+                playlists = playlists.data;
                 if (playlists.items.length) {
                     return recWrap(i+50)
                     .then(function(morePlaylists){
@@ -36,6 +37,7 @@ app.factory('SpotifyRetriever', function(AuthService, Spotify, $log, $q){
         var recWrap = function(i){
             return Spotify.getPlaylistTracks(userId, playlistId, {market:"US", offset:i})
             .then(function(songs){
+                songs = songs.data;
                 var songList = songs.items;
                 songList = songList.map(function(item){
                     return item.track;
@@ -92,6 +94,7 @@ app.factory('SpotifyRetriever', function(AuthService, Spotify, $log, $q){
                     return Promise.all(gettingFeatures)
                 })
                 .then(function(allTracksFeatures){
+                    allTracksFeatures = allTracksFeatures.map(i => i.data);
                     allTracksFeatures = _.flatten(allTracksFeatures.map(function(e){return e.audio_features}))
                     var mergedTrackInfo = _.map(allTracks, function(item){
                         return _.extend(item, _.findWhere(allTracksFeatures, {id: item.id}));

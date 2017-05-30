@@ -57,7 +57,7 @@
             if (!Spotify.authToken) Spotify.setAuthToken(data.user.access_token);
             Spotify.getCurrentUser()
             .then(function(userDetails){
-                $rootScope.user = userDetails;
+                $rootScope.user = userDetails.data;
                 $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
             }) 
             .catch($log); 
