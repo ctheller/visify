@@ -6,7 +6,7 @@ app.config(function ($stateProvider) {
     });
 });
 
-app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetriever, AUTH_EVENTS, $log, d3Service, PlayerFactory){
+app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetriever, AUTH_EVENTS, $log, d3Service, PlayerFactory, usSpinnerService){
 	
 	$scope.optionList = [{name: 'Danceability',value:'danceability'}, 
 						{name: 'Tempo',value:'tempo'}, 
@@ -30,15 +30,13 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 
 	var getSongs = function(){
 
-		console.log('trying to get songs?');
+		$scope.showSpinner = true;
 
 		SpotifyRetriever.getAllPlaylistSongs($rootScope.user.id)
 		.then(function(tracks){
 
-			console.log('did get songs!');
+			$scope.showSpinner = false;
 
-			console.log("TRACKS: ",tracks);
-		
 			//make duration in seconds milliseconds instead
 			tracks = tracks.map(function(d){
   					d['duration_ms'] = d['duration_ms']/1000;

@@ -21,6 +21,19 @@ body {
   }
 }
 
+#notice {
+  position: absolute;
+  top: 40px;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  color: "yellow";
+  #noticeborder {
+    padding: 5px;
+    border: 2px solid;
+  }
+}
+
 #player {
   position: absolute;
   top: 45px;
