@@ -404,7 +404,7 @@ app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetrieve
 	    
 		    SpotifyRetriever.getTracksById(trackIds)
 		    .then(function(tracks){
-		    	tracks = tracks[0].tracks
+		    	tracks = _.flatten(tracks);
 		    	PlayerFactory.start(_.sample(tracks), tracks);
 		    	$scope.currentSong = PlayerFactory.getCurrentSong();
 		    })
