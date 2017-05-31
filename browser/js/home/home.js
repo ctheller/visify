@@ -8,15 +8,13 @@ app.config(function ($stateProvider) {
 
 app.controller('HomeCtrl', function($window, $rootScope, $scope, SpotifyRetriever, AUTH_EVENTS, $log, d3Service, PlayerFactory, usSpinnerService){
 	
-	$scope.optionList = [{name: 'Danceability',value:'danceability'}, 
+	$scope.optionList = [{name: 'Danceability',value:'danceability'},
+						{name: "Key", value: 'key'}, 
 						{name: 'Tempo',value:'tempo'}, 
 						{name: 'Energy',value:'energy'}, 
-						{name: 'Duration', value:'duration_ms'}, 
 						{name: 'Positivity',value:'valence'},
-						{name: "Speechiness", value:'speechiness'},
 						{name: "Acousticness", value:'acousticness'},
-						{name: "Liveness", value: 'liveness'},
-						{name: "Key", value: 'key'}]
+						{name: "Liveness", value: 'liveness'}]
 						
 
 	$scope.metadata = 'danceability';
